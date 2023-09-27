@@ -1,0 +1,61 @@
+version: '3.1'
+
+
+networks:
+  database_postgres:
+
+services:
+  postgresql:
+    image: postgres:14
+    restart: 'no'
+    hostname: postgres.com
+
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - 5432:5432
+
+    networks:
+      - database_postgres 
+
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  postgresql-test:
+    image: postgres:14
+    restart: 'no'
+    hostname: postgres
+    
+    environment:
+      POSTGRES_DB: main
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - 5433:5432
+
+    networks:
+      - database_postgres
+
+    volumes:
+      - ./postgres_data_test:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: 'no'
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@email.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+    ports:
+      - 5050:80
+
+    networks:
+      - database_postgres
+
+    depends_on:
+      - postgresql
