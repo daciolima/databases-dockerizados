@@ -1,0 +1,33 @@
+version: "3.2"
+services:
+  node_1:
+    container_name: node_1
+    image: cockroachdb/cockroach:v23.1.10
+    volumes:
+      - ./data/node_1:/cockroach/cockroach-data
+    command: start-single-node --insecure
+    # command: cockroach init --insecure
+    ports:
+      - "26257:26257"
+      - "8070:8080"
+    networks:
+      network_cockroachdb:
+          aliases:
+              - node_1
+
+#   node_2:
+#     container_name: node_2
+#     image: cockroachdb/cockroach:v22.2.14
+#     volumes:
+#       - ./data/node_2:/cockroach/cockroach-data
+#     command: start --insecure --join=node_1
+#     networks:
+#       network_cockroachdb:
+#           aliases:
+#               - node_2
+#     depends_on:
+#       - node_1            
+
+networks:
+  network_cockroachdb:
+      driver: bridge
